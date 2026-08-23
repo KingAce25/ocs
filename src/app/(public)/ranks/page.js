@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import RankInsignia from "./RankInsignia";
 
 function useInView(threshold = 0.15) {
   const ref = useRef(null);
@@ -555,7 +556,10 @@ export default function RanksAndStructure() {
       {/* ── RANK DETAIL PANEL ── */}
       {selected && (
         <section className="px-6 pb-8">
-          <div className="max-w-3xl mx-auto border border-[#c9a84c]/30 bg-[#c9a84c]/[0.04] p-8 relative">
+          <div
+            key={selected.rank}
+            className="max-w-3xl mx-auto border border-[#c9a84c]/30 bg-[#c9a84c]/[0.04] p-8 relative"
+          >
             {[
               "top-0 left-0 border-t-2 border-l-2",
               "top-0 right-0 border-t-2 border-r-2",
@@ -567,8 +571,20 @@ export default function RanksAndStructure() {
                 className={`absolute w-4 h-4 border-[#c9a84c]/50 ${cls}`}
               />
             ))}
-            <div className="flex items-start justify-between gap-4 mb-6">
-              <div>
+            <button
+              onClick={() => setSelectedRank(null)}
+              className="absolute top-6 right-6 text-white/30 hover:text-white/70 transition-colors text-2xl leading-none z-10"
+            >
+              ×
+            </button>
+
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
+              {/* Animated insignia */}
+              <div className="shrink-0">
+                <RankInsignia rank={selected.rank} size="lg" />
+              </div>
+
+              <div className="flex-1 text-center sm:text-left">
                 <div
                   className={`inline-flex items-center gap-2 border px-3 py-1 mb-3 ${tierColors[selected.color].badge}`}
                 >
@@ -576,31 +592,29 @@ export default function RanksAndStructure() {
                     {selected.tier}
                   </span>
                 </div>
-                <div className="flex items-baseline gap-4">
+                <div className="flex items-baseline gap-4 justify-center sm:justify-start flex-wrap">
                   <span
                     className={`font-['Barlow_Condensed'] text-sm tracking-widest ${tierColors[selected.color].label}`}
                   >
                     {selected.abbreviation}
                   </span>
-                  <h3 className="font-['Cormorant_Garamond'] text-white text-3xl font-600">
+                  <h3
+                    className="font-['Cormorant_Garamond'] text-white text-3xl font-600 opacity-0 animate-[fadeInName_0.6s_ease-out_forwards]"
+                    style={{ animationDelay: "850ms" }}
+                  >
                     {selected.rank}
                   </h3>
                   <span className="text-white/20 text-xs font-['Barlow_Condensed']">
                     Level {selected.level}
                   </span>
                 </div>
+                <p className="text-white/60 leading-relaxed font-300 mt-4">
+                  {selected.description}
+                </p>
               </div>
-              <button
-                onClick={() => setSelectedRank(null)}
-                className="text-white/30 hover:text-white/70 transition-colors text-2xl leading-none mt-1"
-              >
-                ×
-              </button>
             </div>
-            <p className="text-white/60 leading-relaxed font-300 mb-8">
-              {selected.description}
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
               <div>
                 <p
                   className={`text-xs tracking-[0.2em] uppercase font-['Barlow_Condensed'] mb-4 ${tierColors[selected.color].label}`}
@@ -814,6 +828,19 @@ export default function RanksAndStructure() {
           </div>
         </div>
       </section>
+
+      <style jsx global>{`
+        @keyframes fadeInName {
+          from {
+            opacity: 0;
+            transform: translateY(6px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 }
