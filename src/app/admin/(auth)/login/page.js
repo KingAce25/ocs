@@ -159,7 +159,7 @@ export default function AdminLogin() {
               )}
               <div className="text-right mt-2">
                 <Link
-                  href="/admin/forgot-password"
+                  href="/admin/forgot_password"
                   className="text-white/30 hover:text-[#c9a84c] text-xs font-['Barlow'] transition-colors"
                 >
                   Forgot password?

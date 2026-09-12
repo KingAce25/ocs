@@ -46,7 +46,11 @@ export async function generateStaticParams() {
     return [];
   }
 
-  return (data ?? []).map((e) => ({ slug: e.slug }));
+  // Defensive: skip any row with a missing/null slug rather than letting
+  // Next.js fail the whole build on { slug: null } (typeof null === "object").
+  return (data ?? [])
+    .filter((e) => typeof e.slug === "string" && e.slug.length > 0)
+    .map((e) => ({ slug: e.slug }));
 }
 
 export default async function EventDetailPage({ params }) {

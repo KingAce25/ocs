@@ -6,7 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import Logo from "../../public/new.png";
 import { ADMIN_NAV_GROUPS, getAdminNavGroups } from "../lib/adminNavigation";
-import { signOut } from "../lib/auth";
+import { signOut } from "@@/lib/auth";
 
 export default function AdminLayout({ children, user }) {
   const router = useRouter();

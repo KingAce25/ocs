@@ -24,6 +24,15 @@ async function assertCanEditEvents(supabase, userId) {
   return permission?.granted ?? false;
 }
 
+function slugify(title) {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
 export async function saveEvent({
   id,
   title,
@@ -75,9 +84,19 @@ export async function saveEvent({
     return { success: true, id };
   }
 
+  let slug = slugify(title);
+  const { count } = await supabase
+    .from("events")
+    .select("*", { count: "exact", head: true })
+    .eq("slug", slug);
+
+  if ((count ?? 0) > 0) {
+    slug = `${slug}-${Date.now().toString(36)}`;
+  }
+
   const { data: inserted, error } = await supabase
     .from("events")
-    .insert(payload)
+    .insert({ ...payload, slug })
     .select()
     .single();
 
